@@ -146,7 +146,7 @@ a.btn{text-decoration:none;display:inline-block}
       <li>下の欄に字を打って「入れる」。何文字まとめて打ってもいい。</li>
       <li>舞台を左右に<b>なぞって位置</b>、↺↻で<b>45度ずつ回して</b>「落とす」。</li>
       <li>1字につき<b>15秒</b>。過ぎると勝手に落ちる。</li>
-      <li>同じ字は<b>2回まで</b>。「口」の中にも字ははまる。</li>
+      <li>同じ字は<b>1回だけ</b>。「口」の中にも字ははまる。</li>
       <li>台から1字でも落ちたら終わり。得点＝<b>積んだ字数×10＋最高の高さcm×5</b>。</li>
     </ol>
     <label class="field">名前 <input id="name" maxlength="10" placeholder="ななし"></label>
@@ -185,7 +185,7 @@ const PUBLIC_URL='https://ggrr514-collab.github.io/mojitsumi/';
 const pl=window.planck, V=pl.Vec2, S=30, GRAV=25;
 
 // ---- 定数（1単位=1mm、字の大きさ60mm）----
-const W=360, U=60, PLAT_W=200, PLAT_H=36, FALL_Y=380, TURN=15, MAXUSE=2, CELL=5, RS=3;
+const W=360, U=60, PLAT_W=200, PLAT_H=36, FALL_Y=380, TURN=15, MAXUSE=1, CELL=5, RS=3;
 const GLYPH_FONT='"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif';
 const hira2kata=c=>{const n=c.codePointAt(0);return (n>=0x3041&&n<=0x3096)?String.fromCodePoint(n+0x60):c;};
 const MODES={
@@ -284,7 +284,7 @@ function enqueue(str){
     const item={ch:c,shape:undefined}; G.queue.push(item);
     getShape(c).then(s=>{item.shape=s; if(!s){G.queue=G.queue.filter(q=>q!==item);G.used[c]--;toast(`「${c}」は形を読み取れませんでした`);} renderQueue();});
   }
-  if(over.length)toast(`同じ字は2回までです（${[...new Set(over)].join('')}）`);
+  if(over.length)toast(`同じ字は1回だけです（${[...new Set(over)].join('')}）`);
   else if(bad)toast(m.bad);
   renderQueue();
 }
