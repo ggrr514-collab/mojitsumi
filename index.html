@@ -121,6 +121,10 @@ a.btn{text-decoration:none;display:inline-block}
 .how{font-size:13px;color:var(--muted)}
 .how summary{cursor:pointer;font-weight:700;padding:4px 0}
 .how .rules{color:var(--ink);margin-top:6px}
+.field.name{font-weight:700}
+.field.name input{border:1.5px solid var(--ink);font-size:18px;padding:10px 12px}
+.field.name input.need{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 30%,transparent)}
+.namehint{margin:-10px 0 0;font-size:13px;font-weight:700;color:var(--accent)}
 </style>
 
 <div id="app">
@@ -151,8 +155,9 @@ a.btn{text-decoration:none;display:inline-block}
     <div class="logo" aria-label="もじつみ"><span>も</span><span>じ</span><span>つ</span><span>み</span></div>
     <p class="lead">打った字を、崩さずに積む。</p>
     <div class="hero"><img class="l" src="scene.png" alt="字を積んでいる場面" width="720" height="720"><img class="d" src="scene-dark.png" alt="" width="720" height="720"></div>
+    <label class="field name">名前 <input id="name" maxlength="10" placeholder="ここに名前を入れる"></label>
+    <p class="namehint" id="nameHint" hidden>名前を入れるとランキングに載ります。入れずに遊ぶときは、もう一度押してください。</p>
     <div class="modes" id="modes"></div>
-    <label class="field">名前 <input id="name" maxlength="10" placeholder="ななし"></label>
     <details class="how"><summary>あそびかた</summary>
     <ol class="rules">
       <li>下の欄に字を打って「入れる」。何文字まとめて打ってもいい。</li>
@@ -426,7 +431,7 @@ function apiPost(d){
   return fetch(RANK_API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(d),signal:ctl.signal}).then(r=>r.json());
 }
 function rankPanel(el,mode,selectable){
-  el._mode=mode; if(!el._period)el._period=apiDown?'local':'day';
+  el._mode=mode; if(!el._period)el._period=apiDown?'local':'all';
   if(apiDown&&el._period!=='local')el._period='local';
   el.innerHTML='';
   const h=document.createElement('h2');h.style.fontSize='16px';h.textContent=(apiDown?'ランキング（この端末）':'全国ランキング');el.appendChild(h);
@@ -489,7 +494,8 @@ function renderModes(){const box=$('modes');box.innerHTML='';
     b.onclick=()=>start(k);box.appendChild(b);}}
 
 let lastMode='hira';
-function start(mode){audio();lastMode=mode;store.set('mojitsumi_name',$('name').value);newGame(mode);
+function start(mode){if(!$('title').hidden&&!$('name').value.trim()&&!start.asked){start.asked=true;$('nameHint').hidden=false;const n=$('name');n.classList.add('need');n.focus();return;}
+  $('nameHint').hidden=true;$('name').classList.remove('need');audio();lastMode=mode;store.set('mojitsumi_name',$('name').value);newGame(mode);
   $('title').hidden=true;$('result').hidden=true;setTimeout(()=>$('txt').focus(),50);}
 
 // ---- 入力 ----
