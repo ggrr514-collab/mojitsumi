@@ -112,6 +112,15 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;margin:0}
 a.btn{text-decoration:none;display:inline-block}
 #shareText{width:100%;font:inherit;font-size:13px;border:1px solid var(--line);border-radius:8px;padding:8px;background:var(--panel);color:var(--ink);resize:none}
 @media (prefers-reduced-motion: reduce){#toast{transition:none}}
+.hero{border:1.5px solid var(--grid);border-radius:6px;overflow:hidden;background:var(--paper)}
+.hero img{display:block;width:100%;height:auto}
+.hero .d{display:none}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .hero .l{display:none}:root:not([data-theme="light"]) .hero .d{display:block}}
+:root[data-theme="dark"] .hero .l{display:none}
+:root[data-theme="dark"] .hero .d{display:block}
+.how{font-size:13px;color:var(--muted)}
+.how summary{cursor:pointer;font-weight:700;padding:4px 0}
+.how .rules{color:var(--ink);margin-top:6px}
 </style>
 
 <div id="app">
@@ -140,8 +149,11 @@ a.btn{text-decoration:none;display:inline-block}
 <section class="overlay" id="title">
   <div class="sheet">
     <div class="logo" aria-label="もじつみ"><span>も</span><span>じ</span><span>つ</span><span>み</span></div>
-    <p class="lead">打った字が、その字の形のまま落ちてくる。崩さずにどこまで積めるか。</p>
+    <p class="lead">打った字を、崩さずに積む。</p>
+    <div class="hero"><img class="l" src="scene.png" alt="字を積んでいる場面" width="720" height="720"><img class="d" src="scene-dark.png" alt="" width="720" height="720"></div>
     <div class="modes" id="modes"></div>
+    <label class="field">名前 <input id="name" maxlength="10" placeholder="ななし"></label>
+    <details class="how"><summary>あそびかた</summary>
     <ol class="rules">
       <li>下の欄に字を打って「入れる」。何文字まとめて打ってもいい。</li>
       <li>舞台を左右に<b>なぞって位置</b>、↺↻で<b>45度ずつ回して</b>「落とす」。</li>
@@ -149,7 +161,7 @@ a.btn{text-decoration:none;display:inline-block}
       <li>同じ字は<b>1回だけ</b>。「口」の中にも字ははまる。</li>
       <li>台から1字でも落ちたら終わり。得点＝<b>積んだ字数×10＋最高の高さcm×5</b>。</li>
     </ol>
-    <label class="field">名前 <input id="name" maxlength="10" placeholder="ななし"></label>
+    </details>
     <div class="rank-panel" id="tPanel"></div>
     <p class="hub" style="font-size:13px;margin:0"><a href="https://ggrr514-collab.github.io/moji/" style="color:inherit;font-weight:700">← もじあそび（ほかのゲームへ）</a></p>
   </div>
@@ -514,7 +526,7 @@ function boot(){
   document.fonts.load(`900 ${U}px "Noto Sans JP"`,'あア字').catch(()=>{});
   requestAnimationFrame(frame);
 }
-window.__game={get G(){return G;},enqueue,drop,rotate,start,getShape,get world(){return world;}};
+window.__game={get G(){return G;},enqueue,drop,rotate,start,getShape,get world(){return world;},tick(sec){const n=Math.round(sec*60);for(let i=0;i<n;i++)update(1/60);render();}};
 window.claude?.hot?.ready?window.claude.hot.ready(boot):boot();
 })();
 </script>
